@@ -3,6 +3,7 @@ import math
 
 from test_framework import generic_test
 from test_framework.test_utils import enable_executor_hook
+from heapq import heappush, heappushpop, nlargest
 
 
 class Star:
@@ -27,8 +28,15 @@ class Star:
 
 
 def find_closest_k_stars(stars, k):
-    # TODO - you fill in here.
-    return []
+    k_closest = []
+    heappush(k_closest, (stars[0].distance(), stars[0]))
+    for s in stars[1:]:
+        if s.distance() < -k_closest[0][0]:
+            if len(k_closest) < k:
+                heappush(k_closest, (-s.distance(), s))
+            else:
+                heappushpop(k_closest, (-s.distance(), s))
+    return [s for (_, s) in nlargest(k, k_closest)]
 
 
 def comp(expected_output, output):
