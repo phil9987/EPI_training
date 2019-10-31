@@ -6,7 +6,34 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def has_cycle(head):
-    # TODO - you fill in here.
+
+    def cycle_len(end):
+        start = end.next
+        res = 1
+        while start is not end:
+            res += 1
+            start = start.next
+        return res
+
+    beginning = head
+    slow = head
+    if not head or not head.next or not head.next.next:
+        return None
+    fast = head.next.next
+    while fast and fast.next and fast.next.next:
+        slow, fast = slow.next, fast.next.next
+        if slow is fast:
+            # detect cycle beginning
+            print("detected cycle, finding end")
+            cycle_length = cycle_len(slow)
+            slow = beginning
+            fast = beginning
+            for _ in range(cycle_length):
+                fast = fast.next
+            while slow is not fast:
+                slow = slow.next
+                fast = fast.next
+            return slow
     return None
 
 

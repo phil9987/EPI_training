@@ -4,20 +4,53 @@ from test_framework.test_failure import TestFailure
 
 class Queue:
     def __init__(self, capacity):
-        # TODO - you fill in here.
+        self.queue = [0]*capacity
+        self.capacity = capacity
+        self.head = capacity - 1
+        self.tail = capacity - 1
+        self._size = 0
         return
+
+    def _double_size(self):
+        #print("doubling capacity {} (current_size={})".format(self.capacity, self.size))
+        #print("old queue (head={} tail={}): ".format(self.head, self.tail))
+        #print(','.join(map(str, self.queue)))
+        old_capacity = self.capacity
+        self.capacity = self.capacity * 2
+        new_queue = [0] * self.capacity
+        for i in range(self._size):
+            new_queue[-1 - i] = self.queue[(self.capacity + self.tail - i) % old_capacity]
+        self.head = self.capacity - self._size - 1
+        self.tail = self.capacity - 1
+        self.queue = new_queue
+        #print("new queue (head={} tail={}): ".format(self.head, self.tail))
+        #print(','.join(map(str, self.queue)))
 
     def enqueue(self, x):
-        # TODO - you fill in here.
-        return
+        #print("enqueueing {}".format(x))
+        self.queue[self.head] = x
+        self._size += 1
+        if self._size == self.capacity:
+            self._double_size()
+        else:
+            self.head = (self.capacity + self.head - 1) % self.capacity
+
 
     def dequeue(self):
-        # TODO - you fill in here.
-        return 0
+        if self._size > 0:
+            res = self.queue[self.tail]
+            self._size -= 1
+            if self._size == 0:
+                self.head = (self.capacity + self.head + 1) % self.capacity
+                self.tail = self.head
+            else:
+                self.tail = (self.capacity + self.tail - 1) % self.capacity
+            return res
+        else:
+            raise LookupError("size of queue is 0")
 
-    def size(self):
-        # TODO - you fill in here.
-        return 0
+    def size(self):        
+        return self._size
 
 
 def queue_tester(ops):
