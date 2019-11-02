@@ -2,8 +2,15 @@ from test_framework import generic_test
 
 
 def find_first_greater_than_k(tree, k):
-    # TODO - you fill in here.
-    return None
+    prev = tree
+    while tree and tree.data <= k:
+        prev = tree
+        tree = tree.right
+    # now we are at the node which is > k
+    while tree:
+        prev = tree
+        tree = tree.left
+    return prev.data
 
 
 def find_first_greater_than_k_wrapper(tree, k):
