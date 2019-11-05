@@ -1,16 +1,17 @@
+from typing import Optional
+
+from bst_node import BstNode
 from test_framework import generic_test
 
 
-def find_first_greater_than_k(tree, k):
-    prev = tree
-    while tree and tree.data <= k:
-        prev = tree
-        tree = tree.right
-    # now we are at the node which is > k
-    while tree:
-        prev = tree
-        tree = tree.left
-    return prev.data
+def find_first_greater_than_k(tree: BstNode, k: int) -> Optional[BstNode]:
+    subtree, first_so_far = tree, None
+    while subtree:
+        if subtree.data > k:
+            first_so_far, subtree = subtree, subtree.left
+        else:
+            subtree = subtree.right
+    return first_so_far
 
 
 def find_first_greater_than_k_wrapper(tree, k):
@@ -20,6 +21,7 @@ def find_first_greater_than_k_wrapper(tree, k):
 
 if __name__ == '__main__':
     exit(
-        generic_test.generic_test_main("search_first_greater_value_in_bst.py",
-                                       'search_first_greater_value_in_bst.tsv',
-                                       find_first_greater_than_k_wrapper))
+        generic_test.generic_test_main(
+            'search_first_greater_value_in_bst.py',
+            'search_first_greater_value_in_bst.tsv',
+            find_first_greater_than_k_wrapper))
